@@ -17,9 +17,10 @@ fn main() {
     getrandom::getrandom(&mut salt).unwrap();
     thread::sleep(Duration::from_millis(5000));
     loop {
-        if hash_counter > 2147483646 {
+        if hash_counter > 10 {
             getrandom::getrandom(&mut rbuf).unwrap();
-            hash_counter = 0
+            getrandom::getrandom(&mut salt).unwrap();
+            hash_counter = 0;
         } else {
             hash_counter += 1
         }
