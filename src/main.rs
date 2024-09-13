@@ -9,8 +9,8 @@ fn main() {
     let stdout = io::stdout();
     let mut stdout = stdout.lock();
     let mut hasher = Sha3_256::new();
-    let mut rbuf = [0u8; 32];
-    let mut salt = [0u8; 24];
+    let mut rbuf = [0u8; 256];
+    let mut salt = [0u8; 32];
     let mut hash_counter: i32 = 0;
     let mut random_hash;
     getrandom::getrandom(&mut rbuf).unwrap();
