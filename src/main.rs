@@ -10,14 +10,13 @@ fn main() {
     let mut stdout = stdout.lock();
     let mut hasher = Sha3_256::new();
     let mut rbuf = [0u8; 32];
-    let mut salt = [0u8; 12];
+    let mut salt = [0u8; 24];
     let mut hash_counter: i32 = 0;
     let mut random_hash;
     getrandom::getrandom(&mut rbuf).unwrap();
     getrandom::getrandom(&mut salt).unwrap();
-    thread::sleep(Duration::from_millis(5000));
     loop {
-        if hash_counter > 10 {
+        if hash_counter > 2147483646 {
             getrandom::getrandom(&mut rbuf).unwrap();
             getrandom::getrandom(&mut salt).unwrap();
             hash_counter = 0;
