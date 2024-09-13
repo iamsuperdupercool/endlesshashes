@@ -15,9 +15,6 @@ fn main() {
     let mut random_hash;
     getrandom::getrandom(&mut rbuf).unwrap();
     getrandom::getrandom(&mut salt).unwrap();
-    write!(stdout, "Seed: {}\n", hex::encode(rbuf)).unwrap();
-    write!(stdout, "Salt: {}\n", hex::encode(salt)).unwrap();
-    write!(stdout, "Starting in 5 seconds...\n").unwrap();
     thread::sleep(Duration::from_millis(5000));
     loop {
         if hash_counter > 2147483646 {
