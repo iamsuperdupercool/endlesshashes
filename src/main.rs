@@ -26,7 +26,8 @@ fn main() {
         hasher.update(rbuf);
         hasher.update(salt);
         hasher.update(hash_counter.to_ne_bytes());
-        random_hash = hex::encode(hasher.finalize_reset());
+        random_hash = hex::encode(hasher.finalize());
+        rbuf = hasher.finalize_reset()
         write!(stdout, "{}\n", random_hash).unwrap();
         stdout.flush().unwrap();
         thread::sleep(Duration::from_millis(5));
