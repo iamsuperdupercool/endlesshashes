@@ -1,35 +1,38 @@
 use std::io;
 use std::io::Write;
-use std::{thread, time::Duration};
 use getrandom;
-use sha3::{Digest, Sha3_256};
+use blake3;
 use hex;
+//  write!(stdout, "{}\n", random_hash).unwrap();
+//  stdout.flush().unwrap();
+//  thread::sleep(Duration::from_millis(5));
+//  2147483646
+//  getrandom::getrandom(&mut rbuf).unwrap();
+//  hex::encode(hasher.finalize());
 fn main() {
-    // Get a lock on stdout
     let stdout = io::stdout();
     let mut stdout = stdout.lock();
-    let mut hasher = Sha3_256::new();
-    let mut rbuf = [0u8; 256];
-    let mut salt = [0u8; 24];
-    let mut hash_counter: i32 = 0;
-    let mut random_hash;
-    getrandom::getrandom(&mut rbuf).unwrap();
-    getrandom::getrandom(&mut salt).unwrap();
+    let mut hasher = blake3::Hasher::new();
+    let mut value: [u8; 32] = [0u8; 32];
+    let mut constant: [u8; 64] = [0u8; 64];
+    let mut counter: i32 = 0;
+    getrandom::getrandom(&mut value).unwrap();
+    getrandom::getrandom(&mut constant).unwrap();
     loop {
-        if hash_counter > 2147483646 {
-            getrandom::getrandom(&mut rbuf).unwrap();
-            getrandom::getrandom(&mut salt).unwrap();
-            hash_counter = 0;
+        if counter > 2147483646 {
+            getrandom::getrandom(&mut value).unwrap();
+            getrandom::getrandom(&mut constant).unwrap();
+            counter = 0
         } else {
-            hash_counter += 1
+            counter += 1
         }
-        hasher.update(rbuf);
-        hasher.update(salt);
-        hasher.update(hash_counter.to_ne_bytes());
-        random_hash = hex::encode(hasher.finalize());
-        rbuf = hasher.finalize_reset()
-        write!(stdout, "{}\n", random_hash).unwrap();
+        hasher.update(&constant);
+        hasher.update(&value);
+        hasher.update(&counter.to_ne_bytes());
+        hasher.update(blake3::hash(&value).as_bytes());
+        value = *hasher.finalize().as_bytes();
+        hasher.reset();
+        write!(stdout, "{}\n", hex::encode(value)).unwrap();
         stdout.flush().unwrap();
-        thread::sleep(Duration::from_millis(5));
     }
 }
