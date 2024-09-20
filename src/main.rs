@@ -3,12 +3,6 @@ use std::io::Write;
 use getrandom;
 use blake3;
 use hex;
-//  write!(stdout, "{}\n", random_hash).unwrap();
-//  stdout.flush().unwrap();
-//  thread::sleep(Duration::from_millis(5));
-//  2147483646
-//  getrandom::getrandom(&mut rbuf).unwrap();
-//  hex::encode(hasher.finalize());
 fn main() {
     let stdout = io::stdout();
     let mut stdout = stdout.lock();
